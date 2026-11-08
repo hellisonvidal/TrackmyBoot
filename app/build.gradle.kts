@@ -3,6 +3,7 @@ plugins {
     id("org.jetbrains.kotlin.android")
     id("com.google.devtools.ksp")
     id("kotlinx-serialization")
+    id("org.owasp.dependencycheck")
 }
 
 android {
