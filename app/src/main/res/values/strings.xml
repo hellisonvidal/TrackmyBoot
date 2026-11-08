@@ -1,0 +1,87 @@
+<resources>
+    <string name="app_name">TrackmyBoot</string>
+    <string name="app_tagline">Monitore preços de artigos de futebol</string>
+
+    <!-- Navigation -->
+    <string name="nav_home">Início</string>
+    <string name="nav_search">Buscar</string>
+    <string name="nav_watchlist">Lista de Desejos</string>
+    <string name="nav_alerts">Alertas</string>
+    <string name="nav_settings">Configurações</string>
+
+    <!-- Home Screen -->
+    <string name="home_title">Ofertas de Futebol</string>
+    <string name="home_subtitle">Encontre as melhores ofertas em camisas, bolas, chuteiras e mais</string>
+    <string name="category_jerseys">Camisas</string>
+    <string name="category_balls">Bolas</string>
+    <string name="category_cleats">Chuteiras</string>
+    <string name="category_accessories">Acessórios</string>
+    <string name="category_all">Todas</string>
+    <string name="price_drop">Queda de preço</string>
+    <string name="best_deal">Melhor oferta</string>
+    <string name="view_all">Ver todas</string>
+
+    <!-- Product Details -->
+    <string name="product_details">Detalhes do Produto</string>
+    <string name="current_price">Preço Atual</string>
+    <string name="original_price">Preço Original</string>
+    <string name="discount">Desconto</string>
+    <string name="store">Loja</string>
+    <string name="availability">Disponibilidade</string>
+    <string name="in_stock">Em estoque</string>
+    <string name="out_of_stock">Fora de estoque</string>
+    <string name="add_to_watchlist">Adicionar à lista de desejos</string>
+    <string name="remove_from_watchlist">Remover da lista de desejos</string>
+    <string name="open_store">Abrir na loja</string>
+    <string name="price_history">Histórico de Preços</string>
+    <string name="notify_me">Me notificar quando cair</string>
+
+    <!-- Watchlist -->
+    <string name="watchlist_title">Minha Lista de Desejos</string>
+    <string name="watchlist_empty">Sua lista está vazia</string>
+    <string name="watchlist_empty_desc">Adicione produtos para acompanhar seus preços</string>
+    <string name="watchlist_remove">Remover</string>
+    <string name="target_price">Preço alvo</string>
+    <string name="set_target_price">Definir preço alvo</string>
+
+    <!-- Alerts -->
+    <string name="alerts_title">Alertas de Preço</string>
+    <string name="alerts_empty">Nenhum alerta configurado</string>
+    <string name="alerts_empty_desc">Você será notificado quando um produto atingir seu preço alvo</string>
+    <string name="alert_created">Alerta criado com sucesso</string>
+    <string name="alert_triggered">Preço alvo atingido!</string>
+
+    <!-- Search -->
+    <string name="search_hint">Buscar camisas, bolas, chuteiras...</string>
+    <string name="search_results">Resultados para</string>
+    <string name="no_results">Nenhum resultado encontrado</string>
+    <string name="filter">Filtrar</string>
+    <string name="sort_by">Ordenar por</string>
+    <string name="sort_price_low">Preço: Menor primeiro</string>
+    <string name="sort_price_high">Preço: Maior primeiro</string>
+    <string name="sort_discount">Maior desconto</string>
+    <string name="sort_newest">Mais recentes</string>
+
+    <!-- Settings -->
+    <string name="settings_title">Configurações</string>
+    <string name="settings_notifications">Notificações</string>
+    <string name="settings_price_check_interval">Intervalo de verificação de preços</string>
+    <string name="settings_auto_sync">Sincronização automática</string>
+    <string name="settings_theme">Tema</string>
+    <string name="settings_language">Idioma</string>
+    <string name="settings_about">Sobre</string>
+    <string name="settings_version">Versão 1.0.0</string>
+    <string name="settings_clear_cache">Limpar cache</string>
+    <string name="settings_export_data">Exportar dados</string>
+
+    <!-- Common -->
+    <string name="loading">Carregando...</string>
+    <string name="error">Erro</string>
+    <string name="retry">Tentar novamente</string>
+    <string name="save">Salvar</string>
+    <string name="cancel">Cancelar</string>
+    <string name="delete">Excluir</string>
+    <string name="edit">Editar</string>
+    <string name="done">Concluído</string>
+    <string name="currency_brl">R$</string>
+</resources>

@@ -1,0 +1,110 @@
+# Dependabot Configuration
+# Automated dependency updates for Gradle (Kotlin/Android)
+
+version: 2
+updates:
+  # Gradle Dependencies (Kotlin DSL)
+  - package-ecosystem: "gradle"
+    directory: "/"
+    schedule:
+      interval: "weekly"
+      day: "monday"
+      time: "06:00"
+      timezone: "America/Sao_Paulo"
+    open-pull-requests-limit: 10
+    labels:
+      - "dependencies"
+      - "gradle"
+    commit-message:
+      prefix: "chore(deps): "
+      include: "scope"
+    groups:
+      android-gradle-plugin:
+        patterns:
+          - "com.android*"
+        update-types:
+          - "minor"
+          - "patch"
+      kotlin:
+        patterns:
+          - "org.jetbrains.kotlin*"
+        update-types:
+          - "minor"
+          - "patch"
+      hilt:
+        patterns:
+          - "com.google.dagger*"
+          - "androidx.hilt*"
+        update-types:
+          - "minor"
+          - "patch"
+      room:
+        patterns:
+          - "androidx.room*"
+        update-types:
+          - "minor"
+          - "patch"
+      compose:
+        patterns:
+          - "androidx.compose*"
+          - "androidx.material3*"
+          - "androidx.activity*"
+          - "androidx.lifecycle*"
+        update-types:
+          - "minor"
+          - "patch"
+      retrofit-okhttp:
+        patterns:
+          - "com.squareup.retrofit2*"
+          - "com.squareup.okhttp3*"
+        update-types:
+          - "minor"
+          - "patch"
+      coil:
+        patterns:
+          - "io.coil-kt*"
+        update-types:
+          - "minor"
+          - "patch"
+      workmanager:
+        patterns:
+          - "androidx.work*"
+        update-types:
+          - "minor"
+          - "patch"
+      navigation:
+        patterns:
+          - "androidx.navigation*"
+        update-types:
+          - "minor"
+          - "patch"
+      serialization:
+        patterns:
+          - "org.jetbrains.kotlinx*"
+        update-types:
+          - "minor"
+          - "patch"
+      coroutines:
+        patterns:
+          - "org.jetbrains.kotlinx:kotlinx-coroutines*"
+        update-types:
+          - "minor"
+          - "patch"
+
+  # GitHub Actions
+  - package-ecosystem: "github-actions"
+    directory: "/"
+    schedule:
+      interval: "weekly"
+      day: "monday"
+      time: "07:00"
+      timezone: "America/Sao_Paulo"
+    labels:
+      - "dependencies"
+      - "github-actions"
+    commit-message:
+      prefix: "ci(deps): "
+      include: "scope"
+
+# Ignore major version updates for stability (create manually if needed)
+# Use dependabot.yml to ignore specific packages if they cause issues
