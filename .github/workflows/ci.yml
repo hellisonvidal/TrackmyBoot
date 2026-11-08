@@ -20,7 +20,7 @@ jobs:
         uses: actions/checkout@v4
 
       # ============================================================
-      # JAVA: Usar JDK padrão do runner (já vem instalado e funcional)
+      # JAVA: Usar JDK padrão do runner (já instalado e funcional)
       # ============================================================
       - name: Set up JDK 17
         uses: actions/setup-java@v4
@@ -28,16 +28,16 @@ jobs:
           distribution: 'temurin'
           java-version: '17'
           cache: 'gradle'
-          # Não especificar patch version - deixa o action escolher o estável
 
       - name: Verify Java
         run: |
           echo "JAVA_HOME=$JAVA_HOME"
           java -version
           which java
+          ls -la "$JAVA_HOME/bin/java"
 
       # ============================================================
-      # GRADLE WRAPPER: Gerar se não existir
+      # GRADLE WRAPPER: Garantir que existe
       # ============================================================
       - name: Setup Gradle Wrapper
         run: |
@@ -67,10 +67,10 @@ jobs:
           # Aceita licenças
           yes | sdkmanager --licenses > /dev/null 2>&1 || true
 
-          # Instala pacotes
+          # Instala pacotes necessários
           sdkmanager "platforms;android-34" "build-tools;34.0.0" "platform-tools" > /dev/null 2>&1 || true
 
-          # Verifica
+          # Verifica instalação
           sdkmanager --list_installed | grep -E "platforms;android-34|build-tools;34.0.0" || true
 
       - name: Cache Gradle
