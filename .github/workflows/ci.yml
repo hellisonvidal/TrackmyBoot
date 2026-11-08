@@ -6,6 +6,10 @@ on:
   pull_request:
     branches: [main, develop]
 
+env:
+  GRADLE_OPTS: "-Dorg.gradle.jvmargs=-Xmx4g -Dfile.encoding=UTF-8"
+  JAVA_OPTS: "-Xmx4g"
+
 jobs:
   lint-and-test:
     name: Lint & Test
@@ -20,15 +24,30 @@ jobs:
         uses: actions/setup-java@v4
         with:
           distribution: 'temurin'
-          java-version: '17'
+          java-version: '17.0.11'  # Versão estável conhecida
           cache: 'gradle'
+          # java-package: jdk  # Garante JDK completo
+
+      - name: Verify Java Installation
+        run: |
+          echo "JAVA_HOME=$JAVA_HOME"
+          echo "java -version:"
+          java -version
+          echo "javac -version:"
+          javac -version
+          ls -la "$JAVA_HOME/bin/java" || true
 
       - name: Setup Android SDK
         uses: android-actions/setup-android@v3
         with:
           api-level: 34
-          ndk-version: r26c
           build-tools-version: 34.0.0
+          cmdline-tools-version: latest
+
+      - name: Accept Android Licenses
+        run: |
+          yes | $ANDROID_HOME/cmdline-tools/latest/bin/sdkmanager --licenses || true
+          yes | $ANDROID_HOME/cmdline-tools/latest/bin/sdkmanager "platforms;android-34" "build-tools;34.0.0" "platform-tools" || true
 
       - name: Cache Gradle packages
         uses: actions/cache@v4
@@ -86,15 +105,25 @@ jobs:
         uses: actions/setup-java@v4
         with:
           distribution: 'temurin'
-          java-version: '17'
+          java-version: '17.0.11'
           cache: 'gradle'
+
+      - name: Verify Java Installation
+        run: |
+          echo "JAVA_HOME=$JAVA_HOME"
+          java -version
 
       - name: Setup Android SDK
         uses: android-actions/setup-android@v3
         with:
           api-level: 34
-          ndk-version: r26c
           build-tools-version: 34.0.0
+          cmdline-tools-version: latest
+
+      - name: Accept Android Licenses
+        run: |
+          yes | $ANDROID_HOME/cmdline-tools/latest/bin/sdkmanager --licenses || true
+          yes | $ANDROID_HOME/cmdline-tools/latest/bin/sdkmanager "platforms;android-34" "build-tools;34.0.0" "platform-tools" || true
 
       - name: Cache Gradle packages
         uses: actions/cache@v4
@@ -134,15 +163,25 @@ jobs:
         uses: actions/setup-java@v4
         with:
           distribution: 'temurin'
-          java-version: '17'
+          java-version: '17.0.11'
           cache: 'gradle'
+
+      - name: Verify Java Installation
+        run: |
+          echo "JAVA_HOME=$JAVA_HOME"
+          java -version
 
       - name: Setup Android SDK
         uses: android-actions/setup-android@v3
         with:
           api-level: 34
-          ndk-version: r26c
           build-tools-version: 34.0.0
+          cmdline-tools-version: latest
+
+      - name: Accept Android Licenses
+        run: |
+          yes | $ANDROID_HOME/cmdline-tools/latest/bin/sdkmanager --licenses || true
+          yes | $ANDROID_HOME/cmdline-tools/latest/bin/sdkmanager "platforms;android-34" "build-tools;34.0.0" "platform-tools" || true
 
       - name: Cache Gradle packages
         uses: actions/cache@v4
@@ -184,7 +223,7 @@ jobs:
         uses: actions/setup-java@v4
         with:
           distribution: 'temurin'
-          java-version: '17'
+          java-version: '17.0.11'
 
       - name: Run OWASP Dependency Check
         uses: dependency-check/Dependency-Check_Action@main
