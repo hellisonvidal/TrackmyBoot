@@ -80,9 +80,6 @@ jobs:
           restore-keys: |
             ${{ runner.os }}-gradle-
 
-      - name: Make gradlew executable
-        run: chmod +x gradlew
-
       - name: Run KTLint
         run: ./gradlew ktlintCheck --no-daemon
         continue-on-error: true
@@ -129,11 +126,11 @@ jobs:
           java-version: '17'
           cache: 'gradle'
 
-      - name: Setup Gradle Wrapper
-        run: |
-          echo "Generating Gradle Wrapper on Linux runner..."
-          gradle wrapper --gradle-version 8.5 --distribution-type bin
-          chmod +x gradlew
+      - name: Make gradlew executable
+        run: chmod +x gradlew
+
+      - name: Verify Gradle Wrapper
+        run: ./gradlew --version
 
       - name: Setup Android SDK
         run: |
@@ -187,11 +184,11 @@ jobs:
           java-version: '17'
           cache: 'gradle'
 
-      - name: Setup Gradle Wrapper
-        run: |
-          echo "Generating Gradle Wrapper on Linux runner..."
-          gradle wrapper --gradle-version 8.5 --distribution-type bin
-          chmod +x gradlew
+      - name: Make gradlew executable
+        run: chmod +x gradlew
+
+      - name: Verify Gradle Wrapper
+        run: ./gradlew --version
 
       - name: Setup Android SDK
         run: |
