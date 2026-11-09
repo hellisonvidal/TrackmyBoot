@@ -72,7 +72,7 @@ dependencies {
     val kotlinxCoroutinesVersion = "1.7.3"
     val kotlinxSerializationVersion = "1.6.3"
     val coilVersion = "2.6.0"
-    val material3Version = "1.3.0"
+    val material3Version = "1.3.1"
     val workManagerVersion = "2.9.0"
 
     // AndroidX Core
