@@ -41,6 +41,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.draw.drawWithContent
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.Path
@@ -133,7 +134,7 @@ fun OfferCard(offer: Offer, watched: Boolean, onWatch: () -> Unit, modifier: Mod
             Spacer(Modifier.width(12.dp))
             Column(Modifier.weight(1f)) {
                 Row(verticalAlignment = Alignment.CenterVertically) {
-                    StoreBadge(offer.storeName, offer.isDemo)
+                    StoreBadge(offer.storeName)
                     if (!offer.available) {
                         Spacer(Modifier.width(6.dp))
                         Text("Esgotado", style = MaterialTheme.typography.labelSmall, color = MaterialTheme.colorScheme.error)
@@ -178,17 +179,17 @@ fun OfferImage(url: String?, fallbackEmoji: String, size: Int) {
 }
 
 @Composable
-fun StoreBadge(name: String, demo: Boolean) {
+fun StoreBadge(name: String) {
     Surface(
         shape = RoundedCornerShape(6.dp),
-        color = if (demo) MaterialTheme.colorScheme.surfaceVariant else MaterialTheme.colorScheme.secondaryContainer,
+        color = MaterialTheme.colorScheme.secondaryContainer,
     ) {
         Text(
-            if (demo) "DEMO" else name,
+            name,
             modifier = Modifier.padding(horizontal = 6.dp, vertical = 2.dp),
             style = MaterialTheme.typography.labelSmall,
             fontWeight = FontWeight.Bold,
-            color = if (demo) MaterialTheme.colorScheme.onSurfaceVariant else MaterialTheme.colorScheme.onSecondaryContainer,
+            color = MaterialTheme.colorScheme.onSecondaryContainer,
         )
     }
 }
@@ -266,4 +267,21 @@ fun SectionTitle(text: String, modifier: Modifier = Modifier, action: (@Composab
 @Composable
 fun ClickableRow(onClick: () -> Unit, content: @Composable () -> Unit) {
     Box(Modifier.fillMaxWidth().clickable(onClick = onClick)) { content() }
+}
+
+/** Texto de uma linha que diminui a fonte até caber no espaço disponível (ex.: rótulos do menu inferior). */
+@Composable
+fun FitText(text: String, modifier: Modifier = Modifier, style: androidx.compose.ui.text.TextStyle = MaterialTheme.typography.labelMedium) {
+    var scale by remember(text) { mutableStateOf(1f) }
+    var ready by remember(text) { mutableStateOf(false) }
+    Text(
+        text,
+        modifier = modifier.drawWithContent { if (ready) drawContent() },
+        style = style.copy(fontSize = style.fontSize * scale),
+        maxLines = 1,
+        softWrap = false,
+        onTextLayout = { result ->
+            if (result.didOverflowWidth && scale > 0.6f) scale *= 0.92f else ready = true
+        },
+    )
 }

@@ -42,19 +42,21 @@ import com.trackmyboot.app.data.model.StorePlatform
 import com.trackmyboot.app.ui.AppViewModel
 
 @Composable
-fun StoresScreen(app: AppViewModel) {
+fun SettingsScreen(app: AppViewModel) {
     val settings by app.settings.collectAsStateWithLifecycle()
     val stores by app.stores.collectAsStateWithLifecycle()
     var adding by remember { mutableStateOf(false) }
 
     LazyColumn {
         item {
+            Text("Notificações", style = MaterialTheme.typography.titleSmall, fontWeight = FontWeight.Bold, modifier = Modifier.padding(start = 16.dp, top = 16.dp))
             ListItem(
                 headlineContent = { Text("Avisos de queda de preço") },
                 supportingContent = { Text("Notificações dos produtos monitorados") },
                 trailingContent = { Switch(checked = settings.notificationsEnabled, onCheckedChange = app::setNotifications) },
             )
             HorizontalDivider()
+            Text("Lojas consultadas", style = MaterialTheme.typography.titleLarge, modifier = Modifier.padding(start = 16.dp, top = 16.dp))
         }
         StoreKind.entries.forEach { kind ->
             val group = stores.filter { it.kind == kind }
@@ -70,7 +72,7 @@ fun StoresScreen(app: AppViewModel) {
                         supportingContent = {
                             Text(
                                 listOfNotNull(
-                                    store.baseUrl.removePrefix("https://").takeIf { store.platform != StorePlatform.DEMO },
+                                    store.baseUrl.removePrefix("https://").removePrefix("api."),
                                     platformLabel(store.platform),
                                     club?.let { "Clube: ${it.name}" },
                                 ).joinToString(" · "),
@@ -97,7 +99,7 @@ fun StoresScreen(app: AppViewModel) {
                 Spacer(Modifier.height(8.dp))
                 Text(
                     "Lojas em VTEX ou Shopify podem ser adicionadas pelo endereço do site. " +
-                        "Se uma loja bloquear o acesso automático, ela aparece como indisponível na busca.",
+                        "Se uma loja bloquear a consulta automática, a busca mostra um atalho para abri-la direto no site.",
                     style = MaterialTheme.typography.bodySmall,
                 )
             }
@@ -114,7 +116,8 @@ private fun platformLabel(p: StorePlatform) = when (p) {
     StorePlatform.VTEX -> "VTEX"
     StorePlatform.SHOPIFY -> "Shopify"
     StorePlatform.MERCADO_LIVRE -> "API Mercado Livre"
-    StorePlatform.DEMO -> "Dados fictícios para testes"
+    StorePlatform.WEB -> "Leitura da página de busca"
+    StorePlatform.LINK -> "Abre a busca no site ou app da loja"
 }
 
 @OptIn(ExperimentalMaterial3Api::class)

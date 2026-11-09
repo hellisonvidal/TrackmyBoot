@@ -65,16 +65,9 @@ data class OffersUiState(
     val result: SearchResult? = null,
     val category: Category? = null,
     val sort: SortOrder = SortOrder.BEST_DISCOUNT,
-    val showDemo: Boolean = true,
 ) {
     val offers: List<Offer>
-        get() {
-            val list = result?.offers.orEmpty().filter { showDemo || !it.isDemo }
-            val real = list.filterNot { it.isDemo }
-            val demo = list.filter { it.isDemo }
-            // Ofertas reais sempre aparecem antes das de demonstração.
-            return sortList(real) + sortList(demo)
-        }
+        get() = sortList(result?.offers.orEmpty())
 
     private fun sortList(list: List<Offer>) = when (sort) {
         SortOrder.BEST_DISCOUNT -> list.sortedWith(compareByDescending<Offer> { it.discountPercent }.thenBy { it.price })
@@ -110,7 +103,6 @@ class OffersViewModel(
     }
 
     fun setSort(sort: SortOrder) = _state.update { it.copy(sort = sort) }
-    fun setShowDemo(show: Boolean) = _state.update { it.copy(showDemo = show) }
 
     fun load(force: Boolean = false) {
         job?.cancel()

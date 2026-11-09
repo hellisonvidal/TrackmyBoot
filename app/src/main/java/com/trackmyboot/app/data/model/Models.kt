@@ -57,9 +57,20 @@ data class Club(
     }
 }
 
-enum class StorePlatform { VTEX, SHOPIFY, MERCADO_LIVRE, DEMO }
+enum class StorePlatform {
+    /** API pública de catálogo VTEX. */
+    VTEX,
+    /** API pública de lojas Shopify. */
+    SHOPIFY,
+    /** API do Mercado Livre. */
+    MERCADO_LIVRE,
+    /** Página de busca da loja, lendo os dados de produto embutidos no HTML (JSON-LD, Next.js etc.). */
+    WEB,
+    /** Loja sem captura automática: o app só abre a busca no site ou app da loja. */
+    LINK,
+}
 
-enum class StoreKind(val label: String) { RETAILER("Varejistas"), MARKETPLACE("Marketplaces"), BRAND("Marcas"), CLUB("Lojas de clubes"), DEMO("Demonstração") }
+enum class StoreKind(val label: String) { RETAILER("Varejistas"), MARKETPLACE("Marketplaces"), BRAND("Marcas"), CLUB("Lojas de clubes") }
 
 /** Uma loja on-line de onde o app captura preços. */
 data class StoreInfo(
@@ -68,8 +79,19 @@ data class StoreInfo(
     val baseUrl: String,
     val platform: StorePlatform,
     val kind: StoreKind,
-    val enabledByDefault: Boolean = true,
-)
+    /**
+     * Endereço da busca no site da loja, com `{q}` (termo codificado) ou `{slug}` (termo-com-hifens).
+     * Usado pelo conector WEB e pelo atalho "abrir na loja".
+     */
+    val searchUrl: String? = null,
+) {
+    fun searchLink(term: String): String? {
+        val template = searchUrl ?: return null
+        val q = java.net.URLEncoder.encode(term.trim(), "UTF-8")
+        val slug = term.trim().normalized().replace(Regex("[^a-z0-9]+"), "-").trim('-')
+        return template.replace("{q}", q).replace("{slug}", slug)
+    }
+}
 
 /** Uma oferta capturada em uma loja. */
 @Serializable
@@ -87,7 +109,6 @@ data class Offer(
     val imageUrl: String?,
     val url: String,
     val available: Boolean = true,
-    val isDemo: Boolean = false,
 ) {
     val discountPercent: Int
         get() = if (listPrice != null && listPrice > price && listPrice > 0) (((listPrice - price) / listPrice) * 100).toInt() else 0

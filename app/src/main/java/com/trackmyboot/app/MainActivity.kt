@@ -15,7 +15,7 @@ import androidx.compose.material.icons.filled.Home
 import androidx.compose.material.icons.filled.NotificationsActive
 import androidx.compose.material.icons.filled.Search
 import androidx.compose.material.icons.filled.Shield
-import androidx.compose.material.icons.filled.Storefront
+import androidx.compose.material.icons.filled.Settings
 import androidx.compose.material3.Badge
 import androidx.compose.material3.BadgedBox
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -46,13 +46,14 @@ import com.trackmyboot.app.data.catalog.ClubCatalog
 import com.trackmyboot.app.data.model.Category
 import com.trackmyboot.app.ui.AppViewModel
 import com.trackmyboot.app.ui.ClubsViewModel
+import com.trackmyboot.app.ui.components.FitText
 import com.trackmyboot.app.ui.OffersViewModel
 import com.trackmyboot.app.ui.screens.ClubHeader
 import com.trackmyboot.app.ui.screens.ClubsScreen
 import com.trackmyboot.app.ui.screens.HomeScreen
 import com.trackmyboot.app.ui.screens.OffersContent
 import com.trackmyboot.app.ui.screens.SearchScreen
-import com.trackmyboot.app.ui.screens.StoresScreen
+import com.trackmyboot.app.ui.screens.SettingsScreen
 import com.trackmyboot.app.ui.screens.WatchlistScreen
 import com.trackmyboot.app.ui.theme.TrackmyBootTheme
 
@@ -72,8 +73,8 @@ private val tabs = listOf(
     Tab("home", "Início", Icons.Filled.Home),
     Tab("clubs", "Clubes", Icons.Filled.Shield),
     Tab("search", "Buscar", Icons.Filled.Search),
-    Tab("watchlist", "Monitorados", Icons.Filled.NotificationsActive),
-    Tab("stores", "Lojas", Icons.Filled.Storefront),
+    Tab("watchlist", "Alertas", Icons.Filled.NotificationsActive),
+    Tab("settings", "Configurações", Icons.Filled.Settings),
 )
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -120,7 +121,8 @@ private fun AppRoot(container: AppContainer) {
                                 Icon(tab.icon, null)
                             }
                         },
-                        label = { Text(tab.label) },
+                        label = { FitText(tab.label) },
+                        alwaysShowLabel = true,
                     )
                 }
             }
@@ -144,7 +146,7 @@ private fun AppRoot(container: AppContainer) {
                 SearchScreen(app, vm)
             }
             composable("watchlist") { WatchlistScreen(app) }
-            composable("stores") { StoresScreen(app) }
+            composable("settings") { SettingsScreen(app) }
             composable("category/{id}", arguments = listOf(navArgument("id") { type = NavType.StringType })) { entry ->
                 val category = Category.valueOf(entry.arguments?.getString("id") ?: Category.CAMISAS.name)
                 val vm: OffersViewModel = viewModel(key = "category-$category") { OffersViewModel(container, null, category) }

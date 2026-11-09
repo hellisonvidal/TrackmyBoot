@@ -15,6 +15,9 @@ import okhttp3.Request
 import java.io.IOException
 import java.util.concurrent.TimeUnit
 
+private const val BROWSER_UA =
+    "Mozilla/5.0 (Linux; Android 14; Pixel 8) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/130.0.0.0 Mobile Safari/537.36"
+
 class StoreHttpException(val code: Int, message: String) : IOException(message)
 
 /** Cliente HTTP compartilhado pelos conectores de loja. */
@@ -26,6 +29,20 @@ class Http(
         .build(),
 ) {
     val json = Json { ignoreUnknownKeys = true; isLenient = true }
+
+    /** Baixa uma página HTML como um navegador comum (algumas lojas recusam clientes desconhecidos). */
+    suspend fun getText(url: String): String = withContext(Dispatchers.IO) {
+        val request = Request.Builder()
+            .url(url)
+            .header("Accept", "text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8")
+            .header("Accept-Language", "pt-BR,pt;q=0.9")
+            .header("User-Agent", BROWSER_UA)
+            .build()
+        client.newCall(request).execute().use { response ->
+            if (!response.isSuccessful) throw StoreHttpException(response.code, "HTTP ${response.code}")
+            response.body?.string().orEmpty()
+        }
+    }
 
     suspend fun getJson(url: String): JsonElement = withContext(Dispatchers.IO) {
         val request = Request.Builder()

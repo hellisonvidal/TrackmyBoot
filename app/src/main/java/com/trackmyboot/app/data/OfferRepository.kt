@@ -11,12 +11,12 @@ import com.trackmyboot.app.data.model.StoreInfo
 import com.trackmyboot.app.data.model.StorePlatform
 import com.trackmyboot.app.data.prefs.Settings
 import com.trackmyboot.app.data.prefs.UserPrefs
-import com.trackmyboot.app.data.source.DemoSource
 import com.trackmyboot.app.data.source.Http
 import com.trackmyboot.app.data.source.MercadoLivreSource
 import com.trackmyboot.app.data.source.ShopifySource
 import com.trackmyboot.app.data.source.StoreSource
 import com.trackmyboot.app.data.source.VtexSource
+import com.trackmyboot.app.data.source.WebPageSource
 import kotlinx.coroutines.async
 import kotlinx.coroutines.awaitAll
 import kotlinx.coroutines.coroutineScope
@@ -39,9 +39,12 @@ data class OfferQuery(val text: String = "", val category: Category? = null, val
 
 data class StoreStatus(val store: StoreInfo, val count: Int, val error: String?)
 
-data class SearchResult(val offers: List<Offer>, val statuses: List<StoreStatus>) {
-    val failedStores get() = statuses.filter { it.error != null }
-    val hasRealOffers get() = offers.any { !it.isDemo }
+data class SearchResult(val term: String, val offers: List<Offer>, val statuses: List<StoreStatus>) {
+    /** Lojas consultadas que falharam (bloqueio, fora do ar, mudança de plataforma...). */
+    val failedStores get() = statuses.filter { it.error != null && it.store.platform != StorePlatform.LINK }
+
+    /** Lojas sem ofertas capturadas: o usuário pode abrir a busca direto no site/app delas. */
+    val storesToOpen get() = statuses.filter { it.count == 0 && it.store.searchUrl != null }.map { it.store }
 }
 
 class OfferRepository(
@@ -54,11 +57,12 @@ class OfferRepository(
     fun allStores(settings: Settings): List<StoreInfo> =
         StoreCatalog.builtIn + settings.customStores.map { it.toStoreInfo() }
 
-    private fun sourceFor(store: StoreInfo): StoreSource = when (store.platform) {
+    private fun sourceFor(store: StoreInfo): StoreSource? = when (store.platform) {
         StorePlatform.VTEX -> VtexSource(store, http)
         StorePlatform.SHOPIFY -> ShopifySource(store, http)
         StorePlatform.MERCADO_LIVRE -> MercadoLivreSource(store, http)
-        StorePlatform.DEMO -> DemoSource(store)
+        StorePlatform.WEB -> WebPageSource(store, http)
+        StorePlatform.LINK -> null
     }
 
     /** Consulta todas as lojas ligadas em paralelo e junta as ofertas. */
@@ -76,8 +80,10 @@ class OfferRepository(
         val perStore = coroutineScope {
             stores.map { store ->
                 async {
+                    val source = sourceFor(store)
+                        ?: return@async StoreStatus(store, 0, "sem captura automática") to emptyList()
                     val outcome = withTimeoutOrNull(TIMEOUT_MS) {
-                        runCatching { sourceFor(store).search(query.searchTerm) }
+                        runCatching { source.search(query.searchTerm) }
                     }
                     when {
                         outcome == null -> StoreStatus(store, 0, "tempo esgotado") to emptyList()
@@ -91,6 +97,7 @@ class OfferRepository(
             }.awaitAll()
         }
         val result = SearchResult(
+            term = query.searchTerm,
             offers = perStore.flatMap { it.second }.distinctBy { it.id },
             statuses = perStore.map { it.first },
         )
@@ -109,7 +116,7 @@ class OfferRepository(
         watchDao.upsert(
             WatchedOffer(
                 id = offer.id, storeId = offer.storeId, storeName = offer.storeName, productRef = offer.productRef,
-                title = offer.title, brand = offer.brand, imageUrl = offer.imageUrl, url = offer.url, isDemo = offer.isDemo,
+                title = offer.title, brand = offer.brand, imageUrl = offer.imageUrl, url = offer.url,
                 initialPrice = offer.price, currentPrice = offer.price, lowestPrice = offer.price, listPrice = offer.listPrice,
                 targetPrice = targetPrice, available = offer.available, addedAt = now, lastCheckedAt = now,
             ),
@@ -136,8 +143,8 @@ class OfferRepository(
         val stores = allStores(settings).associateBy { it.id }
         val changes = mutableListOf<PriceChange>()
         for (item in watchDao.getAll()) {
-            val store = stores[item.storeId] ?: continue
-            val fresh = withTimeoutOrNull(TIMEOUT_MS) { runCatching { sourceFor(store).refresh(item.productRef) }.getOrNull() }
+            val source = stores[item.storeId]?.let(::sourceFor) ?: continue
+            val fresh = withTimeoutOrNull(TIMEOUT_MS) { runCatching { source.refresh(item.productRef) }.getOrNull() }
             val now = System.currentTimeMillis()
             if (fresh == null) {
                 watchDao.upsert(item.copy(lastCheckedAt = now))

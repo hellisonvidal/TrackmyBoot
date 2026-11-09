@@ -105,7 +105,7 @@ private fun WatchedCard(item: WatchedOffer, prices: List<Double>, onEdit: () -> 
                 OfferImage(item.imageUrl, Category.detect(item.title)?.emoji ?: "⚽", 64)
                 Spacer(Modifier.width(12.dp))
                 Column(Modifier.weight(1f)) {
-                    StoreBadge(item.storeName, item.isDemo)
+                    StoreBadge(item.storeName)
                     Text(item.title, maxLines = 2, overflow = TextOverflow.Ellipsis, style = MaterialTheme.typography.bodyMedium)
                     PriceRow(item.currentPrice, item.listPrice, discount)
                 }

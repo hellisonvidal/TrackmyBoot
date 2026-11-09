@@ -1,6 +1,9 @@
 package com.trackmyboot.app.ui.screens
 
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.ExperimentalLayoutApi
+import androidx.compose.foundation.layout.FlowRow
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
@@ -14,6 +17,7 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.automirrored.filled.OpenInNew
 import androidx.compose.material.icons.filled.Refresh
 import androidx.compose.material.icons.filled.Star
 import androidx.compose.material.icons.filled.StarBorder
@@ -28,7 +32,7 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.LinearProgressIndicator
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Switch
+import androidx.compose.material3.AssistChip
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
@@ -37,6 +41,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalUriHandler
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
@@ -44,6 +49,7 @@ import com.trackmyboot.app.data.model.Category
 import com.trackmyboot.app.data.model.Club
 import com.trackmyboot.app.data.model.Offer
 import com.trackmyboot.app.data.model.SortOrder
+import com.trackmyboot.app.data.model.StoreInfo
 import com.trackmyboot.app.ui.AppViewModel
 import com.trackmyboot.app.ui.OffersViewModel
 import com.trackmyboot.app.ui.components.ClubCrest
@@ -75,7 +81,6 @@ fun OffersContent(
         }
         Toolbar(
             sort = state.sort, onSort = vm::setSort,
-            showDemo = state.showDemo, onShowDemo = vm::setShowDemo,
             onRefresh = { vm.load(force = true) },
             count = state.offers.size,
         )
@@ -84,16 +89,14 @@ fun OffersContent(
         val result = state.result
         LazyColumn(contentPadding = PaddingValues(16.dp), verticalArrangement = Arrangement.spacedBy(10.dp)) {
             if (result != null && !state.loading) {
-                val failed = result.failedStores.filter { it.store.id != "demo" }
-                if (!result.hasRealOffers) {
+                val failed = result.failedStores
+                if (failed.isNotEmpty()) {
                     item {
                         InfoCard(
-                            if (failed.isNotEmpty()) "Não foi possível obter preços reais agora (${failed.size} loja(s) indisponível(is)). " +
-                                "Exibindo ofertas de demonstração quando ativadas." else "As lojas não retornaram resultados para esta busca.",
+                            "Sem resposta agora: " + failed.joinToString { it.store.name } +
+                                ". Algumas lojas bloqueiam a consulta automática; use os atalhos abaixo para ver direto no site.",
                         )
                     }
-                } else if (failed.isNotEmpty()) {
-                    item { InfoCard("Indisponíveis agora: " + failed.joinToString { it.store.name }) }
                 }
             }
             items(state.offers, key = { it.id }) { offer ->
@@ -102,7 +105,10 @@ fun OffersContent(
                 })
             }
             if (result != null && !state.loading && state.offers.isEmpty()) {
-                item { Text(emptyHint, Modifier.fillMaxWidth().padding(32.dp), textAlign = TextAlign.Center) }
+                item { Text(emptyHint, Modifier.fillMaxWidth().padding(24.dp), textAlign = TextAlign.Center) }
+            }
+            if (result != null && !state.loading && result.storesToOpen.isNotEmpty()) {
+                item { OpenInStores(result.term, result.storesToOpen) }
             }
             if (result == null && state.loading) {
                 item { Box(Modifier.fillMaxWidth().padding(32.dp), contentAlignment = Alignment.Center) { CircularProgressIndicator() } }
@@ -119,13 +125,10 @@ fun OffersContent(
 }
 
 @Composable
-private fun Toolbar(sort: SortOrder, onSort: (SortOrder) -> Unit, showDemo: Boolean, onShowDemo: (Boolean) -> Unit, onRefresh: () -> Unit, count: Int) {
+private fun Toolbar(sort: SortOrder, onSort: (SortOrder) -> Unit, onRefresh: () -> Unit, count: Int) {
     var menu by remember { mutableStateOf(false) }
     Row(Modifier.fillMaxWidth().padding(horizontal = 16.dp, vertical = 4.dp), verticalAlignment = Alignment.CenterVertically) {
         Text("$count ofertas", style = MaterialTheme.typography.labelLarge, modifier = Modifier.weight(1f))
-        Text("Demo", style = MaterialTheme.typography.labelMedium)
-        Spacer(Modifier.width(4.dp))
-        Switch(checked = showDemo, onCheckedChange = onShowDemo)
         Box {
             IconButton(onClick = { menu = true }) { Icon(Icons.Filled.SwapVert, contentDescription = "Ordenar") }
             DropdownMenu(expanded = menu, onDismissRequest = { menu = false }) {
@@ -135,6 +138,26 @@ private fun Toolbar(sort: SortOrder, onSort: (SortOrder) -> Unit, showDemo: Bool
             }
         }
         IconButton(onClick = onRefresh) { Icon(Icons.Filled.Refresh, contentDescription = "Atualizar preços") }
+    }
+}
+
+/** Atalhos para abrir a mesma busca no site (ou app) das lojas que não retornaram ofertas. */
+@OptIn(ExperimentalLayoutApi::class)
+@Composable
+private fun OpenInStores(term: String, stores: List<StoreInfo>) {
+    val uri = LocalUriHandler.current
+    Column(Modifier.fillMaxWidth().padding(top = 8.dp)) {
+        Text("Ver direto nas lojas", style = MaterialTheme.typography.titleSmall)
+        Text("Busca por \"$term\"", style = MaterialTheme.typography.bodySmall, color = MaterialTheme.colorScheme.onSurfaceVariant)
+        FlowRow(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
+            stores.forEach { store ->
+                AssistChip(
+                    onClick = { store.searchLink(term)?.let { runCatching { uri.openUri(it) } } },
+                    label = { Text(store.name) },
+                    trailingIcon = { Icon(Icons.AutoMirrored.Filled.OpenInNew, null, Modifier.size(16.dp)) },
+                )
+            }
+        }
     }
 }
 

@@ -27,7 +27,14 @@ data class CustomStore(
     val platform: StorePlatform,
     val clubId: String? = null,
 ) {
-    fun toStoreInfo() = StoreInfo(id, name, baseUrl, platform, if (clubId != null) StoreKind.CLUB else StoreKind.RETAILER)
+    fun toStoreInfo() = StoreInfo(
+        id, name, baseUrl, platform,
+        if (clubId != null) StoreKind.CLUB else StoreKind.RETAILER,
+        searchUrl = when (platform) {
+            StorePlatform.SHOPIFY -> "$baseUrl/search?q={q}"
+            else -> "$baseUrl/{q}?_q={q}&map=ft"
+        },
+    )
 }
 
 data class Settings(

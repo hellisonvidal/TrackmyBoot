@@ -15,8 +15,8 @@ e você pode filtrar tudo pelo **clube para quem torce**.
 | **Início** | Grade de categorias e atalhos para os seus clubes |
 | **Clubes** | Busca de clubes e seleções pelo nome ou apelido ("Galo", "Timão", "SPFC"...). A ⭐ marca os clubes para quem você torce. Na tela do clube aparecem as ofertas dele, filtradas por categoria |
 | **Buscar** | Busca livre em todas as lojas, com filtro por categoria |
-| **Monitorados** | Produtos que você acompanha, com preço alvo opcional, menor preço visto e um gráfico do histórico. A cada 6 horas o app confere os preços de novo e manda uma notificação quando algum baixa |
-| **Lojas** | Liga e desliga lojas. Também dá para **cadastrar lojas novas**, como a loja oficial do seu clube, se ela usar VTEX ou Shopify |
+| **Alertas** | Produtos que você acompanha, com preço alvo opcional, menor preço visto e um gráfico do histórico. A cada 6 horas o app confere os preços de novo e manda uma notificação quando algum baixa |
+| **Configurações** | Avisos de queda de preço e lojas consultadas. Dá para ligar e desligar cada loja e **cadastrar lojas novas**, como a loja oficial do seu clube, se ela usar VTEX ou Shopify |
 
 Em todas as listas você pode ordenar por maior desconto, menor preço ou maior preço.
 
@@ -24,20 +24,23 @@ Em todas as listas você pode ordenar por maior desconto, menor preço ou maior 
 
 Cada loja usa um **conector** que depende da plataforma de e-commerce dela (`app/src/main/java/com/trackmyboot/app/data/source/`):
 
-| Conector | Endpoint usado | Lojas embutidas |
-|----------|----------------|-----------------|
-| `VtexSource` | `/api/catalog_system/pub/products/search` | Centauro, FutFanatics, Decathlon, Penalty, Umbro, Topper |
+| Conector | Como captura | Lojas embutidas |
+|----------|--------------|-----------------|
+| `WebPageSource` | Abre a página de busca da loja e lê os dados de produto embutidos nela (JSON-LD do schema.org, `__NEXT_DATA__` do Next.js e outros blocos JSON) | Netshoes, Centauro, Dafiti, Magazine Luiza, Nike, Adidas, Puma |
+| `VtexSource` | API pública `/api/catalog_system/pub/products/search` | FutFanatics, Decathlon, Penalty, Umbro, Topper |
+| `MercadoLivreSource` | API `api.mercadolibre.com/sites/MLB/search` | Mercado Livre |
 | `ShopifySource` | `/search/suggest.json` e `/products/<handle>.js` | (lojas cadastradas pelo usuário) |
-| `MercadoLivreSource` | `api.mercadolibre.com/sites/MLB/search` | Mercado Livre |
-| `DemoSource` | — (dados fictícios) | "Ofertas de demonstração" |
+| Só atalho | Abre a busca no site ou app da loja | Amazon, Shopee |
 
-- Todas as lojas ligadas são consultadas **em paralelo**. Quando uma falha ou demora mais de 20 s, as outras continuam, e a tela informa quais ficaram indisponíveis.
-- Os resultados passam por um filtro de categoria e de clube. Os títulos são comparados sem acentos e com os apelidos de cada clube, para que "Camisa do Galo" conte como Atlético Mineiro e "interna" não conte como Inter.
-- **Ofertas de demonstração** aparecem com o selo `DEMO`. Elas mantêm o app usável sem rede ou quando as lojas bloqueiam o acesso. Dá para escondê-las com a chave "Demo" na lista ou desligar a loja de demonstração na aba Lojas.
+- Todas as lojas ligadas são consultadas **em paralelo**. Se uma falha ou demora mais de 20 s, as outras continuam, e a tela informa quais não responderam.
+- Os resultados passam por um filtro de categoria e de clube. Os títulos são comparados sem acentos e com os apelidos dos clubes, então "Camisa do Galo" conta como Atlético Mineiro e "interna" não conta como Inter.
+- No fim de cada busca há a seção **"Ver direto nas lojas"**, com atalhos que abrem a mesma busca nas lojas que não retornaram ofertas (Amazon, Shopee e as que bloquearam a consulta).
+- O app só mostra preços reais obtidos na internet. Não há mais dados de demonstração.
 
 ### ⚠️ Limitações conhecidas (leia antes de publicar)
 
-- **A plataforma das lojas embutidas não foi verificada.** O ambiente de desenvolvimento não alcançava os sites das lojas. Os conectores foram escritos com base nas APIs públicas documentadas de VTEX, Shopify e Mercado Livre e testados contra respostas simuladas. Se uma loja não usar a plataforma indicada, ou se mudar de plataforma, ela vai aparecer como "indisponível". Para corrigir, basta editar `data/catalog/StoreCatalog.kt`.
+- **As lojas embutidas não foram testadas contra os sites reais.** O ambiente de desenvolvimento não alcançava os sites das lojas, então os conectores foram testados só com respostas simuladas. Uma loja que use outra plataforma, não traga dados estruturados na página de busca ou bloqueie robôs vai aparecer como "sem resposta", e o atalho para o site dela continua funcionando. Para ajustar uma loja, edite `data/catalog/StoreCatalog.kt`.
+- **Amazon e Shopee** não permitem consulta automática sem credenciais (a Amazon exige a Product Advertising API, para afiliados). Por enquanto o app abre a busca direto nelas.
 - A API de busca do Mercado Livre pode exigir um token de acesso (OAuth). Sem ele, a loja aparece como indisponível.
 - Algumas lojas bloqueiam acesso automatizado com captcha ou WAF. Antes de distribuir o app, revise os termos de uso de cada loja. Programas de afiliados ou APIs oficiais são um caminho mais estável.
 - Não existe um conector genérico para lojas de clubes, porque cada clube usa uma plataforma diferente. Por isso o app permite cadastrar a loja oficial pelo endereço e vinculá-la ao clube. Ela então entra automaticamente nas buscas desse clube.
@@ -51,7 +54,7 @@ app/src/main/java/com/trackmyboot/app/
 ├── data/
 │   ├── model/               # Category, Club, StoreInfo, Offer
 │   ├── catalog/             # Lista de clubes e de lojas embutidas
-│   ├── source/              # Conectores: VTEX, Shopify, Mercado Livre, Demo
+│   ├── source/              # Conectores: página web (JSON-LD/Next.js), VTEX, Shopify, Mercado Livre
 │   ├── local/               # Room: produtos monitorados e histórico de preços
 │   ├── prefs/               # DataStore: clubes favoritos, lojas ligadas, lojas personalizadas
 │   ├── worker/              # WorkManager: conferência periódica e notificações
