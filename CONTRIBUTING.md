@@ -117,10 +117,10 @@ export PATH=$PATH:$ANDROID_HOME/platform-tools
 - Estados imutáveis preferidos (`val` sobre `var`)
 
 ### Arquitetura
-- **ViewModels**: Um por tela, sem lógica de negócio direta
+- **ViewModels**: sem lógica de negócio direta (ficam em `ui/ViewModels.kt`)
 - **Repositories**: Single source of truth, expõem `Flow`
 - **Use Cases**: Opcional, para lógica complexa reutilizável
-- **Data Layer**: Room + Retrofit + WorkManager
+- **Data Layer**: Room + DataStore + OkHttp (conectores de loja) + WorkManager
 
 ### Naming Conventions
 | Tipo | Convenção | Exemplo |

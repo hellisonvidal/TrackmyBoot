@@ -31,13 +31,6 @@ updates:
         update-types:
           - "minor"
           - "patch"
-      hilt:
-        patterns:
-          - "com.google.dagger*"
-          - "androidx.hilt*"
-        update-types:
-          - "minor"
-          - "patch"
       room:
         patterns:
           - "androidx.room*"
@@ -53,9 +46,8 @@ updates:
         update-types:
           - "minor"
           - "patch"
-      retrofit-okhttp:
+      okhttp:
         patterns:
-          - "com.squareup.retrofit2*"
           - "com.squareup.okhttp3*"
         update-types:
           - "minor"

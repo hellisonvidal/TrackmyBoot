@@ -1,352 +1,94 @@
-# ⚽ TrackmyBoot - Monitor de Preços de Artigos de Futebol
+<p align="center"><img src="docs/icon-512.png" width="128" alt="Ícone do TrackmyBoot"></p>
 
-[![Kotlin](https://img.shields.io/badge/Kotlin-1.9.23-7F52FF?logo=kotlin&logoColor=white)](https://kotlinlang.org/)
-[![Android](https://img.shields.io/badge/Android-API%2024%2B-3DDC84?logo=android&logoColor=white)](https://developer.android.com/)
-[![Compose](https://img.shields.io/badge/Jetpack%20Compose-1.6-4285F4?logo=jetpackcompose&logoColor=white)](https://developer.android.com/jetpack/compose)
-[![Material3](https://img.shields.io/badge/Material%203-1.3-757575?logo=materialdesign&logoColor=white)](https://m3.material.io/)
-[![Hilt](https://img.shields.io/badge/Hilt-2.48-FF6D00?logo=dagger&logoColor=white)](https://dagger.dev/hilt/)
-[![Room](https://img.shields.io/badge/Room-2.6-4285F4?logo=sqlite&logoColor=white)](https://developer.android.com/training/data-storage/room)
-[![WorkManager](https://img.shields.io/badge/WorkManager-2.9-4285F4?logo=android&logoColor=white)](https://developer.android.com/topic/libraries/architecture/workmanager)
-[![License](https://img.shields.io/badge/License-MIT-blue.svg)](LICENSE)
+# TrackmyBoot ⚽
 
-> **Aplicativo Android nativo** para monitorar preços e ofertas de artigos de futebol: camisas, bolas, chuteiras, meias, luvas, bolsas, caneleiras e acessórios.
+App Android para **monitorar ofertas de equipamentos de futebol**: camisas, chuteiras, bolas, meiões,
+luvas de goleiro, caneleiras, calções, agasalhos e acessórios. Os preços vêm de várias lojas on-line,
+e você pode filtrar tudo pelo **clube para quem torce**.
 
----
+> Versão 0.1.0, a primeira. Kotlin, Jetpack Compose e Material 3. Android 8.0 (API 26) ou mais novo.
 
-## 📱 Screenshots
+## Funcionalidades
 
-| Home | Busca | Lista de Desejos | Alertas |
-|------|-------|------------------|---------|
-| ![Home](docs/screenshots/home.png) | ![Busca](docs/screenshots/search.png) | ![Wishlist](docs/screenshots/wishlist.png) | ![Alertas](docs/screenshots/alerts.png) |
+| Aba | O que faz |
+|-----|-----------|
+| **Início** | Grade de categorias e atalhos para os seus clubes |
+| **Clubes** | Busca de clubes e seleções pelo nome ou apelido ("Galo", "Timão", "SPFC"...). A ⭐ marca os clubes para quem você torce. Na tela do clube aparecem as ofertas dele, filtradas por categoria |
+| **Buscar** | Busca livre em todas as lojas, com filtro por categoria |
+| **Monitorados** | Produtos que você acompanha, com preço alvo opcional, menor preço visto e um gráfico do histórico. A cada 6 horas o app confere os preços de novo e manda uma notificação quando algum baixa |
+| **Lojas** | Liga e desliga lojas. Também dá para **cadastrar lojas novas**, como a loja oficial do seu clube, se ela usar VTEX ou Shopify |
 
-| Detalhes | Configurações |
-|----------|---------------|
-| ![Detail](docs/screenshots/detail.png) | ![Settings](docs/screenshots/settings.png) |
+Em todas as listas você pode ordenar por maior desconto, menor preço ou maior preço.
 
-> 💡 *Adicione screenshots reais na pasta `docs/screenshots/` após buildar o app*
+## Como os preços são capturados
 
----
+Cada loja usa um **conector** que depende da plataforma de e-commerce dela (`app/src/main/java/com/trackmyboot/app/data/source/`):
 
-## ✨ Funcionalidades
+| Conector | Endpoint usado | Lojas embutidas |
+|----------|----------------|-----------------|
+| `VtexSource` | `/api/catalog_system/pub/products/search` | Centauro, FutFanatics, Decathlon, Penalty, Umbro, Topper |
+| `ShopifySource` | `/search/suggest.json` e `/products/<handle>.js` | (lojas cadastradas pelo usuário) |
+| `MercadoLivreSource` | `api.mercadolibre.com/sites/MLB/search` | Mercado Livre |
+| `DemoSource` | — (dados fictícios) | "Ofertas de demonstração" |
 
-### 🔍 **Busca & Descoberta**
-- Busca textual inteligente (nome, marca, tags)
-- Filtros por **10 categorias**: Camisas, Bolas, Chuteiras, Acessórios, Goleiro, Treino, **Meias, Luvas, Bolsas, Caneleiras**
-- Ordenação: Relevância, Menor Preço, Maior Preço, Maior Desconto, Mais Recentes
-- **36 lojas** monitoradas: grandes varejistas, marketplaces, lojas de clubes, marcas diretas
+- Todas as lojas ligadas são consultadas **em paralelo**. Quando uma falha ou demora mais de 20 s, as outras continuam, e a tela informa quais ficaram indisponíveis.
+- Os resultados passam por um filtro de categoria e de clube. Os títulos são comparados sem acentos e com os apelidos de cada clube, para que "Camisa do Galo" conte como Atlético Mineiro e "interna" não conte como Inter.
+- **Ofertas de demonstração** aparecem com o selo `DEMO`. Elas mantêm o app usável sem rede ou quando as lojas bloqueiam o acesso. Dá para escondê-las com a chave "Demo" na lista ou desligar a loja de demonstração na aba Lojas.
 
-### 💰 **Monitoramento de Preços**
-- Histórico completo com **gráfico interativo** (Canvas)
-- Estatísticas: menor/maior preço, média, economia potencial
-- Detecção automática de **novos menores preços históricos**
+### ⚠️ Limitações conhecidas (leia antes de publicar)
 
-### ❤️ **Lista de Desejos (Watchlist)**
-- Adicione produtos com **preço alvo personalizado**
-- Notificações configuráveis: queda de preço, preço alvo atingido, volta ao estoque
-- Indicador visual quando produto atinge preço alvo
+- **A plataforma das lojas embutidas não foi verificada.** O ambiente de desenvolvimento não alcançava os sites das lojas. Os conectores foram escritos com base nas APIs públicas documentadas de VTEX, Shopify e Mercado Livre e testados contra respostas simuladas. Se uma loja não usar a plataforma indicada, ou se mudar de plataforma, ela vai aparecer como "indisponível". Para corrigir, basta editar `data/catalog/StoreCatalog.kt`.
+- A API de busca do Mercado Livre pode exigir um token de acesso (OAuth). Sem ele, a loja aparece como indisponível.
+- Algumas lojas bloqueiam acesso automatizado com captcha ou WAF. Antes de distribuir o app, revise os termos de uso de cada loja. Programas de afiliados ou APIs oficiais são um caminho mais estável.
+- Não existe um conector genérico para lojas de clubes, porque cada clube usa uma plataforma diferente. Por isso o app permite cadastrar a loja oficial pelo endereço e vinculá-la ao clube. Ela então entra automaticamente nas buscas desse clube.
 
-### 🔔 **Sistema de Alertas Inteligente**
-- **4 tipos de alerta**: Queda de preço, Preço alvo, Volta ao estoque, Novo menor preço
-- Badge de não lidos na aba de alertas
-- "Marcar todos como lidos" com um toque
-- Histórico completo de alertas
-
-### ⚙️ **Configurações Completas**
-- Tema: Sistema / Claro / Escuro
-- Idioma: PT / EN / ES
-- Intervalo de verificação: 1h, 3h, 6h, 12h, 24h
-- Categorias e lojas habilitadas individualmente
-- Desconto mínimo para exibição (slider 0-80%)
-- Exportar/importar dados, limpar cache
-
----
-
-## 🏗️ Arquitetura
+## Arquitetura
 
 ```
-┌─────────────────────────────────────────────────────────────┐
-│                    PRESENTATION LAYER                        │
-│  ┌─────────┐ ┌─────────┐ ┌─────────┐ ┌─────────┐ ┌───────┐  │
-│  │  Home   │ │ Search  │ │Watchlist│ │ Alerts  │ │Settings│  │
-│  └────┬────┘ └────┬────┘ └────┬────┘ └────┬────┘ └───┬───┘  │
-└───────┼────────────┼───────────┼───────────┼──────────┼──────┘
-        ▼            ▼           ▼           ▼          ▼
-┌─────────────────────────────────────────────────────────────┐
-│                      VIEWMODELS                              │
-│  HomeVM • SearchVM • WatchlistVM • AlertsVM • SettingsVM    │
-│  DetailVM                                                    │
-└────────────────────────┬────────────────────────────────────┘
-                         ▼
-┌─────────────────────────────────────────────────────────────┐
-│                       DOMAIN LAYER                           │
-│  Product • WatchlistItem • PriceHistory • Alert • AppSettings│
-└────────────────────────┬────────────────────────────────────┘
-                         ▼
-┌─────────────────────────────────────────────────────────────┐
-│                        DATA LAYER                            │
-│  ┌──────────────┐  ┌──────────────┐  ┌──────────────────┐   │
-│  │   Room DB    │  │  Repository  │  │  Remote/Worker   │   │
-│  │  (Offline)   │◄─┤  (Single    │─►│  (Sync + BG)     │   │
-│  └──────────────┘  │   Source)   │  └──────────────────┘   │
-│                    └──────────────┘                          │
-└─────────────────────────────────────────────────────────────┘
+app/src/main/java/com/trackmyboot/app/
+├── TrackmyBootApp.kt        # Application + AppContainer (injeção de dependências manual)
+├── MainActivity.kt          # Navegação (Navigation Compose) e barra inferior
+├── data/
+│   ├── model/               # Category, Club, StoreInfo, Offer
+│   ├── catalog/             # Lista de clubes e de lojas embutidas
+│   ├── source/              # Conectores: VTEX, Shopify, Mercado Livre, Demo
+│   ├── local/               # Room: produtos monitorados e histórico de preços
+│   ├── prefs/               # DataStore: clubes favoritos, lojas ligadas, lojas personalizadas
+│   ├── worker/              # WorkManager: conferência periódica e notificações
+│   └── OfferRepository.kt   # Busca em paralelo, filtros, cache e monitoramento
+├── ui/                      # Telas, componentes, tema e ViewModels
+└── util/
 ```
 
-### Padrões Utilizados
-- **MVVM + Clean Architecture** - Separação clara de responsabilidades
-- **Repository Pattern** - Abstração de fontes de dados
-- **Unidirectional Data Flow** - StateFlow + Compose
-- **Dependency Injection** - Hilt (compile-time safety)
-- **Offline-First** - Room como source of truth
+## Ícone
 
----
+O ícone foi criado para o app: uma **chuteira** com travas verde-limão e uma **etiqueta de preço com seta para baixo** (queda de preço), sobre um gramado listrado. Arquivos:
 
-## 🛠️ Stack Tecnológico
+- `res/drawable/ic_launcher_foreground.xml`, `ic_launcher_background.xml` e `ic_launcher_monochrome.xml` formam o ícone adaptativo e o ícone temático do Android 13+
+- `res/drawable/ic_notification.xml` é o ícone das notificações
+- `docs/icon.svg` e `docs/icon-512.png` servem para a Play Store e para divulgação
 
-| Camada | Tecnologia | Versão |
-|--------|------------|--------|
-| **Language** | Kotlin | 1.9.23 |
-| **UI** | Jetpack Compose | 1.6 |
-| **Design** | Material 3 | 1.3 |
-| **DI** | Hilt | 2.48 |
-| **Database** | Room | 2.6 |
-| **Network** | Retrofit + OkHttp | 2.11 / 4.12 |
-| **Images** | Coil | 2.6 |
-| **Background** | WorkManager | 2.9 |
-| **Navigation** | Navigation Compose | 2.7 |
-| **Serialization** | Kotlinx Serialization | 1.6 |
-| **Async** | Coroutines + Flow | 1.7 |
+Os escudos dos clubes no app são **estilizados** (cores e iniciais), sem usar marcas registradas.
 
----
+## Compilar e rodar
 
-## 🚀 Como Executar
-
-### Pré-requisitos
-- **Android Studio** Hedgehog (2023.1.1) ou superior
-- **JDK 17** (configurado no `gradle.properties` ou AS)
-- **Android SDK 34** (compileSdk/targetSdk)
-- **Git** (para clonar)
-
-### Clone e Build
-```bash
-# Clone o repositório
-git clone https://github.com/SEU_USUARIO/TrackmyBoot.git
-cd TrackmyBoot
-
-# Build debug
-./gradlew assembleDebug
-
-# Instalar no device/emulador conectado
-./gradlew installDebug
-```
-
-### Executar Testes
-```bash
-# Testes unitários
-./gradlew test
-
-# Testes instrumentados (precisa device/emulador)
-./gradlew connectedAndroidTest
-
-# Relatório de cobertura (se configurado Jacoco)
-./gradlew jacocoTestReport
-```
-
----
-
-## 📁 Estrutura do Projeto
-
-```
-TrackmyBoot/
-├── .github/
-│   └── workflows/           # CI/CD (opcional)
-├── app/
-│   ├── src/
-│   │   ├── main/
-│   │   │   ├── java/com/trackmyboot/app/
-│   │   │   │   ├── data/           # Data Layer
-│   │   │   │   │   ├── db/         # Room: Entities, DAOs, Database
-│   │   │   │   │   ├── remote/     # API Services
-│   │   │   │   │   ├── repository/ # Repositories
-│   │   │   │   │   ├── receiver/   # Broadcast Receivers
-│   │   │   │   │   └── worker/     # WorkManager Workers
-│   │   │   │   ├── di/             # Hilt Modules
-│   │   │   │   ├── domain/         # Domain Layer
-│   │   │   │   │   └── model/      # Domain Models (10 categorias, 36 lojas)
-│   │   │   │   ├── presentation/   # Presentation Layer
-│   │   │   │   │   ├── viewmodel/  # ViewModels (6)
-│   │   │   │   │   └── MainActivity.kt
-│   │   │   │   └── ui/             # UI Layer
-│   │   │   │       ├── components/ # Reusable Composables
-│   │   │   │       ├── preview/    # @Preview Composables
-│   │   │   │       ├── screens/    # Screen Composables (6)
-│   │   │   │       └── theme/      # Material3 Theme (Opção 3)
-│   │   │   ├── res/                # Resources (values, drawable, xml)
-│   │   │   └── AndroidManifest.xml
-│   │   ├── test/                   # Unit Tests
-│   │   └── androidTest/            # Instrumented Tests
-│   ├── build.gradle.kts
-│   └── proguard-rules.pro
-├── build.gradle.kts
-├── settings.gradle.kts
-├── gradle.properties
-├── .gitignore
-├── LICENSE
-└── README.md
-```
-
----
-
-## 🔧 Personalização Rápida
-
-### Adicionar Nova Loja
-```kotlin // domain/model/Product.kt
-enum class Store(...) {
-    // ... existentes
-    NOVA_LOJA("Nova Loja", "https://novaloja.com.br", "https://logo.novaloja.com.br/logo.png")
-}
-```
-
-### Adicionar Nova Categoria
-```kotlin // domain/model/Product.kt
-enum class ProductCategory(...) {
-    // ... existentes
-    NOVA_CAT("Nova Categoria", "ic_nova_cat")
-}
-```
-
-### Alterar Intervalo Padrão de Sync
-```kotlin // presentation/viewmodel/SettingsViewModel.kt
-val priceCheckIntervals = listOf(1, 3, 6, 12, 24) // em horas
-```
-
-### Trocar Tema (Design System)
-```kotlin // ui/theme/Color.kt - Escolha uma opção:
-import com.trackmyboot.app.ui.theme.Option1_CampoVerde      // Clássico
-import com.trackmyboot.app.ui.theme.Option2_NoiteEstadio     // Dark Premium
-import com.trackmyboot.app.ui.theme.Option3_GramadoPremium   // ✅ Atual (Elegante)
-import com.trackmyboot.app.ui.theme.Option4_TorcidaVibrante  // Jovem
-import com.trackmyboot.app.ui.theme.Option5_TechEsportivo    // Tech/Gamer
-```
-
----
-
-## 🔔 Permissões Android
-
-| Permissão | Uso | Versão Mínima |
-|-----------|-----|---------------|
-| `INTERNET` | Acesso à API/Imagens | API 1 |
-| `ACCESS_NETWORK_STATE` | Verificar conectividade | API 1 |
-| `POST_NOTIFICATIONS` | Alertas de preço | API 33 (Android 13) |
-| `RECEIVE_BOOT_COMPLETED` | Iniciar worker no boot | API 1 |
-| `FOREGROUND_SERVICE` | Worker em background | API 28 |
-| `FOREGROUND_SERVICE_DATA_SYNC` | Sync de dados | API 34 |
-
----
-
-## 🧪 Testes & Qualidade
+Requisitos: JDK 17 ou mais novo e o Android SDK 35 (ou o Android Studio Ladybug ou mais novo).
 
 ```bash
-# Lint (análise estática)
-./gradlew lint
-
-# Detekt (se configurado)
-./gradlew detekt
-
-# Verificar dependências desatualizadas
-./gradlew dependencyUpdates
+./gradlew assembleDebug        # gera app/build/outputs/apk/debug/app-debug.apk
+./gradlew testDebugUnitTest    # testes unitários
+./gradlew lintDebug
 ```
 
----
+O CI do GitHub Actions roda os testes, o lint e gera o APK de debug como artefato a cada push.
 
-## 📦 Build de Release
+## Próximos passos sugeridos
 
-```bash
-# Gerar AAB para Play Store
-./gradlew bundleRelease
+- Validar cada loja embutida em um aparelho real e ajustar `StoreCatalog`
+- Token OAuth do Mercado Livre e conectores para outras plataformas (Magento, Salesforce Commerce)
+- Backend próprio para capturar os preços no servidor, evitando bloqueios e economizando bateria
+- Busca por tamanho e numeração, e comparação do mesmo produto entre lojas
 
-# Gerar APK assinado
-./gradlew assembleRelease
-```
+## Licença
 
-> Configure `signingConfigs` no `app/build.gradle.kts` com seu keystore antes do release.
-
----
-
-## 🤝 Contribuindo
-
-1. Fork o projeto
-2. Crie uma branch: `git checkout -b feature/nova-funcionalidade`
-3. Commit suas mudanças: `git commit -m 'feat: adiciona nova funcionalidade'`
-4. Push para a branch: `git push origin feature/nova-funcionalidade`
-5. Abra um Pull Request
-
-### Padrão de Commits (Conventional Commits)
-```
-feat:     nova funcionalidade
-fix:      correção de bug
-docs:     documentação
-style:    formatação (sem alterar lógica)
-refactor: refatoração
-test:     testes
-chore:    manutenção/build
-```
-
----
-
-## 📄 Licença
-
-Este projeto está licenciado sob a **Licença MIT** - veja o arquivo [LICENSE](LICENSE) para detalhes.
-
-```
-MIT License
-
-Copyright (c) 2024 TrackmyBoot
-
-Permission is hereby granted, free of charge, to any person obtaining a copy
-of this software and associated documentation files (the "Software"), to deal
-in the Software without restriction, including without limitation the rights
-to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
-copies of the Software, and to permit persons to whom the Software is
-furnished to do so, subject to the following conditions:
-
-The above copyright notice and this permission notice shall be included in all
-copies or substantial portions of the Software.
-
-THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
-IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
-FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
-AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
-LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
-OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
-SOFTWARE.
-```
-
----
-
-## 🙏 Agradecimentos
-
-- **Material Design 3** - Design system moderno
-- **Jetpack Compose** - UI declarativa revolucionária
-- **Hilt** - DI simples e poderosa
-- **Room** - SQLite abstraction robusta
-- **Coil** - Image loading eficiente
-- **WorkManager** - Background work confiável
-- **Kotlinx Serialization** - JSON type-safe
-
----
-
-## 📞 Contato
-
-- **Issues**: [GitHub Issues](https://github.com/SEU_USUARIO/TrackmyBoot/issues)
-- **Discussões**: [GitHub Discussions](https://github.com/SEU_USUARIO/TrackmyBoot/discussions)
-
----
-
-<div align="center">
-
-**Feito com ❤️ para torcedores e atletas que buscam o melhor preço**
-
-⭐ **Deixe uma estrela se este projeto te ajudou!**
-
-</div>
+MIT. Veja [LICENSE](LICENSE).

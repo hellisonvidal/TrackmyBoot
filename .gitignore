@@ -28,7 +28,6 @@ build/
 # LOCAL CONFIGURATION (não commitar)
 # ============================================================
 local.properties
-gradle.properties
 *.keystore
 *.jks
 signing.properties

@@ -2,56 +2,56 @@
 # Estes usuários/equipes serão automaticamente solicitados para review em PRs
 
 # Proprietários globais (todos os arquivos)
-* @SEU_USUARIO_GITHUB
+* @hellisonvidal
 
 # Arquivos de configuração sensíveis
-/.github/ @SEU_USUARIO_GITHUB
-/gradle.properties @SEU_USUARIO_GITHUB
-/settings.gradle.kts @SEU_USUARIO_GITHUB
-/build.gradle.kts @SEU_USUARIO_GITHUB
-/app/build.gradle.kts @SEU_USUARIO_GITHUB
+/.github/ @hellisonvidal
+/gradle.properties @hellisonvidal
+/settings.gradle.kts @hellisonvidal
+/build.gradle.kts @hellisonvidal
+/app/build.gradle.kts @hellisonvidal
 
 # Keystore e signing (apenas mantenedores)
-/app/keystore/ @SEU_USUARIO_GITHUB
-*.keystore @SEU_USUARIO_GITHUB
-*.jks @SEU_USUARIO_GITHUB
+/app/keystore/ @hellisonvidal
+*.keystore @hellisonvidal
+*.jks @hellisonvidal
 
 # CI/CD
-/.github/workflows/ @SEU_USUARIO_GITHUB
+/.github/workflows/ @hellisonvidal
 
 # Dependências
-.gradle/ @SEU_USUARIO_GITHUB
-gradle/ @SEU_USUARIO_GITHUB
+.gradle/ @hellisonvidal
+gradle/ @hellisonvidal
 
 # Documentação
-/README.md @SEU_USUARIO_GITHUB
-/CONTRIBUTING.md @SEU_USUARIO_GITHUB
-/LICENSE @SEU_USUARIO_GITHUB
+/README.md @hellisonvidal
+/CONTRIBUTING.md @hellisonvidal
+/LICENSE @hellisonvidal
 
 # Código principal - Android
-/app/src/main/java/com/trackmyboot/app/ @SEU_USUARIO_GITHUB
+/app/src/main/java/com/trackmyboot/app/ @hellisonvidal
 
 # UI/Compose
-/app/src/main/java/com/trackmyboot/app/ui/ @SEU_USUARIO_GITHUB
+/app/src/main/java/com/trackmyboot/app/ui/ @hellisonvidal
 
 # ViewModels
-/app/src/main/java/com/trackmyboot/app/presentation/viewmodel/ @SEU_USUARIO_GITHUB
+/app/src/main/java/com/trackmyboot/app/ui/ @hellisonvidal
 
 # Data Layer
-/app/src/main/java/com/trackmyboot/app/data/ @SEU_USUARIO_GITHUB
+/app/src/main/java/com/trackmyboot/app/data/ @hellisonvidal
 
 # Domain Models
-/app/src/main/java/com/trackmyboot/app/domain/ @SEU_USUARIO_GITHUB
+/app/src/main/java/com/trackmyboot/app/data/model/ @hellisonvidal
 
-# DI (Hilt)
-/app/src/main/java/com/trackmyboot/app/di/ @SEU_USUARIO_GITHUB
+# Injeção de dependências
+/app/src/main/java/com/trackmyboot/app/TrackmyBootApp.kt @hellisonvidal
 
 # Recursos
-/app/src/main/res/ @SEU_USUARIO_GITHUB
+/app/src/main/res/ @hellisonvidal
 
 # Manifest
-/app/src/main/AndroidManifest.xml @SEU_USUARIO_GITHUB
+/app/src/main/AndroidManifest.xml @hellisonvidal
 
 # Testes
-/app/src/test/ @SEU_USUARIO_GITHUB
-/app/src/androidTest/ @SEU_USUARIO_GITHUB
+/app/src/test/ @hellisonvidal
+/app/src/androidTest/ @hellisonvidal
