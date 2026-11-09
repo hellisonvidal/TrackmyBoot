@@ -58,8 +58,9 @@ android {
         }
     }
 
-    // Force WorkManager version to 2.9.0 to avoid AGP/compileSdk conflicts
-    resolutionsStrategy {
+// Force WorkManager version to 2.9.0 to avoid AGP/compileSdk conflicts
+configurations.all {
+    resolutionStrategy {
         force("androidx.work:work-runtime:2.9.0")
         force("androidx.work:work-runtime-ktx:2.9.0")
     }
