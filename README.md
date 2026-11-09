@@ -62,10 +62,10 @@ app/src/main/java/com/trackmyboot/app/
 
 ## Ícone
 
-O ícone foi criado para o app: uma **chuteira** com travas verde-limão e uma **etiqueta de preço com seta para baixo** (queda de preço), sobre um gramado listrado. Arquivos:
+O ícone foi criado para o app: uma **lupa verde-limão com uma bola de futebol dentro**, que representa buscar e comparar ofertas, sobre fundo azul-marinho. Arquivos:
 
 - `res/drawable/ic_launcher_foreground.xml`, `ic_launcher_background.xml` e `ic_launcher_monochrome.xml` formam o ícone adaptativo e o ícone temático do Android 13+
-- `res/drawable/ic_notification.xml` é o ícone das notificações
+- `res/drawable/ic_notification.xml` é o ícone das notificações (a lupa)
 - `docs/icon.svg` e `docs/icon-512.png` servem para a Play Store e para divulgação
 
 Os escudos dos clubes no app são **estilizados** (cores e iniciais), sem usar marcas registradas.

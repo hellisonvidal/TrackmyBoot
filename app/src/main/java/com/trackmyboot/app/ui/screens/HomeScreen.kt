@@ -46,8 +46,6 @@ import com.trackmyboot.app.ui.AppViewModel
 import com.trackmyboot.app.ui.components.CategoryTile
 import com.trackmyboot.app.ui.components.ClubCrest
 import com.trackmyboot.app.ui.components.SectionTitle
-import com.trackmyboot.app.ui.theme.PitchGreen
-import com.trackmyboot.app.ui.theme.PitchGreenDark
 
 @Composable
 fun HomeScreen(
@@ -102,7 +100,7 @@ private fun Hero(watchedCount: Int, droppedCount: Int) {
         Modifier
             .fillMaxWidth()
             .clip(RoundedCornerShape(20.dp))
-            .background(Brush.linearGradient(listOf(PitchGreen, PitchGreenDark)))
+            .background(Brush.linearGradient(listOf(Color(0xFF14213D), Color(0xFF0A1022))))
             .padding(20.dp),
     ) {
         Row(verticalAlignment = Alignment.CenterVertically) {

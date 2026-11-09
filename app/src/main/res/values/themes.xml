@@ -3,7 +3,7 @@
     <style name="Theme.TrackmyBoot" parent="android:Theme.Material.Light.NoActionBar" />
 
     <style name="Theme.TrackmyBoot.Splash" parent="Theme.SplashScreen">
-        <item name="windowSplashScreenBackground">@color/pitch_green</item>
+        <item name="windowSplashScreenBackground">@color/icon_navy</item>
         <item name="windowSplashScreenAnimatedIcon">@drawable/ic_launcher_foreground</item>
         <item name="postSplashScreenTheme">@style/Theme.TrackmyBoot</item>
     </style>

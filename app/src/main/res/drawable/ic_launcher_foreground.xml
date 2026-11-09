@@ -2,22 +2,14 @@
 <vector xmlns:android="http://schemas.android.com/apk/res/android"
     android:width="108dp" android:height="108dp"
     android:viewportWidth="108" android:viewportHeight="108">
-
-    <group android:translateY="3" android:scaleX="0.8" android:scaleY="0.8" android:pivotX="54" android:pivotY="54">
-        <!-- Etiqueta de preço com seta para baixo (queda de preço) -->
-        <group android:translateX="30" android:translateY="19" android:rotation="-28" android:pivotX="16" android:pivotY="10">
-            <path android:fillColor="#C6F135" android:pathData="M0,10L8,0L30,0Q32,0 32,2L32,18Q32,20 30,20L8,20Z" />
-            <path android:fillColor="#0B7A43" android:pathData="M5.3,10a2.2,2.2 0,1 1,4.4 0a2.2,2.2 0,1 1,-4.4 0" />
-            <path android:strokeColor="#064D2A" android:strokeWidth="2.6" android:strokeLineCap="round" android:strokeLineJoin="round"
-                android:pathData="M20,4.5L20,14M15.5,10L20,14.8L24.5,10" />
-        </group>
-        <!-- Chuteira -->
-        <path android:fillColor="#FFFFFF" android:pathData="M25,46L40,43C44,42.5 46,46 50,48L72,56C80,59 84,63 84,67C84,70 82,72 78,72L30,72C27,72 25,70 25,67Z" />
-        <path android:fillColor="#1E2A23" android:pathData="M25,66L84,66C84,70 82,72 78,72L30,72C27,72 25,70 25,66Z" />
-        <path android:strokeColor="#0B7A43" android:strokeWidth="2.4" android:strokeLineCap="round" android:pathData="M29,52C40,54 52,58 62,66" />
-        <path android:strokeColor="#1E2A23" android:strokeWidth="2" android:strokeLineCap="round"
-            android:pathData="M55.5,50l-1.7,4.7M61,52l-1.7,4.7M66.5,54l-1.7,4.7" />
-        <!-- Travas -->
-        <path android:fillColor="#C6F135" android:pathData="M31.5,71h2a1.5,1.5 0,0 1,1.5 1.5v3a1.5,1.5 0,0 1,-1.5 1.5h-2a1.5,1.5 0,0 1,-1.5 -1.5v-3a1.5,1.5 0,0 1,1.5 -1.5z M43.5,71h2a1.5,1.5 0,0 1,1.5 1.5v3a1.5,1.5 0,0 1,-1.5 1.5h-2a1.5,1.5 0,0 1,-1.5 -1.5v-3a1.5,1.5 0,0 1,1.5 -1.5z M63.5,71h2a1.5,1.5 0,0 1,1.5 1.5v3a1.5,1.5 0,0 1,-1.5 1.5h-2a1.5,1.5 0,0 1,-1.5 -1.5v-3a1.5,1.5 0,0 1,1.5 -1.5z M75.5,71h2a1.5,1.5 0,0 1,1.5 1.5v3a1.5,1.5 0,0 1,-1.5 1.5h-2a1.5,1.5 0,0 1,-1.5 -1.5v-3a1.5,1.5 0,0 1,1.5 -1.5z" />
+    <group android:translateX="2" android:translateY="2" android:scaleX="0.8" android:scaleY="0.8" android:pivotX="54" android:pivotY="54">
+        <!-- Lupa com a bola de futebol -->
+        <path android:strokeColor="#C6F135" android:strokeWidth="9" android:strokeLineCap="round" android:pathData="M66,66L80,80"/>
+        <path android:fillColor="#14213D" android:strokeColor="#C6F135" android:strokeWidth="5" android:pathData="M27.00,49.00a22.00,22.00 0,1 1,44.00 0a22.00,22.00 0,1 1,-44.00 0Z"/>
+        <path android:fillColor="#FFFFFF" android:pathData="M33.50,49.00a15.50,15.50 0,1 1,31.00 0a15.50,15.50 0,1 1,-31.00 0Z"/>
+        <path android:fillColor="#111111" android:pathData="M49.00,43.42L54.31,47.28L52.28,53.51L45.72,53.51L43.69,47.28Z"/>
+        <path android:strokeColor="#111111" android:strokeWidth="1.09" android:pathData="M49.00,43.42L49.00,37.84M54.31,47.28L59.61,45.55M52.28,53.51L55.56,58.03M45.72,53.51L42.44,58.03M43.69,47.28L38.39,45.55"/>
+        <group><clip-path android:pathData="M33.50,49.00a15.50,15.50 0,1 1,31.00 0a15.50,15.50 0,1 1,-31.00 0Z"/><path android:fillColor="#111111" android:pathData="M46.30,38.17L43.70,34.43L43.17,32.98L54.83,32.98L54.30,34.43L51.70,38.17ZM58.46,43.09L61.21,39.46L62.44,38.50L66.04,49.60L64.49,49.54L60.13,48.22ZM57.55,56.17L61.85,57.67L63.14,58.53L53.70,65.39L53.27,63.90L53.18,59.35ZM44.82,59.35L44.73,63.90L44.30,65.39L34.86,58.53L36.15,57.67L40.45,56.17ZM37.87,48.22L33.51,49.54L31.96,49.60L35.56,38.50L36.79,39.46L39.54,43.09Z"/></group>
+        <path android:strokeColor="#111111" android:strokeWidth="0.93" android:pathData="M33.50,49.00a15.50,15.50 0,1 1,31.00 0a15.50,15.50 0,1 1,-31.00 0Z"/>
     </group>
 </vector>

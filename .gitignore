@@ -69,6 +69,7 @@ coverage/
 # SCREENSHOTS / IMAGES (manter apenas se necessário)
 # ============================================================
 *.png
+!docs/*.png
 *.jpg
 *.jpeg
 *.gif
