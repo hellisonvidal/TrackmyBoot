@@ -81,6 +81,7 @@ dependencies {
     implementation("androidx.lifecycle:lifecycle-viewmodel-compose:$lifecycleVersion")
     implementation("androidx.activity:activity-compose:$activityComposeVersion")
     implementation("androidx.compose.material3:material3:$material3Version")
+    implementation("androidx.compose.material3:material3-android:$material3Version")
     implementation("androidx.compose.material3:material3-window-size-class:$material3Version")
     implementation("androidx.navigation:navigation-compose:$navigationVersion")
 
