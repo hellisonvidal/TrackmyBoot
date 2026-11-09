@@ -37,15 +37,13 @@ jobs:
           ls -la "$JAVA_HOME/bin/java"
 
       # ============================================================
-      # GRADLE WRAPPER: Garantir que existe
+      # GRADLE WRAPPER: Gerar wrapper correto no runner Linux
       # ============================================================
       - name: Setup Gradle Wrapper
         run: |
-          if [ ! -f "./gradlew" ]; then
-            echo "Generating Gradle Wrapper..."
-            gradle wrapper --gradle-version 8.5 --distribution-type bin
-            chmod +x gradlew
-          fi
+          echo "Generating Gradle Wrapper on Linux runner..."
+          gradle wrapper --gradle-version 8.5 --distribution-type bin
+          chmod +x gradlew
           ./gradlew --version
 
       # ============================================================
@@ -134,10 +132,9 @@ jobs:
 
       - name: Setup Gradle Wrapper
         run: |
-          if [ ! -f "./gradlew" ]; then
-            gradle wrapper --gradle-version 8.5 --distribution-type bin
-            chmod +x gradlew
-          fi
+          echo "Generating Gradle Wrapper on Linux runner..."
+          gradle wrapper --gradle-version 8.5 --distribution-type bin
+          chmod +x gradlew
 
       - name: Setup Android SDK
         run: |
@@ -193,10 +190,9 @@ jobs:
 
       - name: Setup Gradle Wrapper
         run: |
-          if [ ! -f "./gradlew" ]; then
-            gradle wrapper --gradle-version 8.5 --distribution-type bin
-            chmod +x gradlew
-          fi
+          echo "Generating Gradle Wrapper on Linux runner..."
+          gradle wrapper --gradle-version 8.5 --distribution-type bin
+          chmod +x gradlew
 
       - name: Setup Android SDK
         run: |
