@@ -37,8 +37,13 @@ jobs:
           ls -la "$JAVA_HOME/bin/java"
 
       # ============================================================
-      # GRADLE WRAPPER: Usar wrapper commitado (Gradle 8.5)
+      # GRADLE WRAPPER: Gerar wrapper correto no Linux (Gradle 8.5)
       # ============================================================
+      - name: Generate Gradle Wrapper (Linux)
+        uses: gradle/gradle-build-action@v2
+        with:
+          arguments: wrapper --gradle-version 8.5 --distribution-type bin
+
       - name: Make gradlew executable
         run: chmod +x gradlew
 
@@ -126,6 +131,11 @@ jobs:
           java-version: '17'
           cache: 'gradle'
 
+      - name: Generate Gradle Wrapper (Linux)
+        uses: gradle/gradle-build-action@v2
+        with:
+          arguments: wrapper --gradle-version 8.5 --distribution-type bin
+
       - name: Make gradlew executable
         run: chmod +x gradlew
 
@@ -183,6 +193,11 @@ jobs:
           distribution: 'temurin'
           java-version: '17'
           cache: 'gradle'
+
+      - name: Generate Gradle Wrapper (Linux)
+        uses: gradle/gradle-build-action@v2
+        with:
+          arguments: wrapper --gradle-version 8.5 --distribution-type bin
 
       - name: Make gradlew executable
         run: chmod +x gradlew
