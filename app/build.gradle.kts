@@ -73,6 +73,7 @@ dependencies {
     val kotlinxSerializationVersion = "1.6.3"
     val coilVersion = "2.6.0"
     val material3Version = "1.3.1"
+    val materialVersion = "1.12.0"
     val workManagerVersion = "2.9.0"
 
     // AndroidX Core
@@ -83,6 +84,7 @@ dependencies {
     implementation("androidx.compose.material3:material3:$material3Version")
     implementation("androidx.compose.material3:material3-android:$material3Version")
     implementation("androidx.compose.material3:material3-window-size-class:$material3Version")
+    implementation("com.google.android.material:material:$materialVersion")
     implementation("androidx.navigation:navigation-compose:$navigationVersion")
 
     // Room Database
