@@ -1,9 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
-<!-- Ícone de notificação: lupa com bola. -->
+<!-- Ícone de notificação: sacola de ofertas com a lente da lupa vazada. -->
 <vector xmlns:android="http://schemas.android.com/apk/res/android"
     android:width="24dp" android:height="24dp"
     android:viewportWidth="24" android:viewportHeight="24">
-    <path android:strokeColor="#FFFFFFFF" android:strokeWidth="2.4" android:pathData="M3.20,10.00a6.80,6.80 0,1 1,13.60 0a6.80,6.80 0,1 1,-13.60 0Z"/>
-    <path android:strokeColor="#FFFFFFFF" android:strokeWidth="3" android:strokeLineCap="round" android:pathData="M15,15L20.5,20.5"/>
-    <path android:fillColor="#FFFFFFFF" android:pathData="M10.00,7.40L12.47,9.20L11.53,12.10L8.47,12.10L7.53,9.20Z"/>
+    <path android:strokeColor="#FFFFFFFF" android:strokeWidth="2" android:strokeLineCap="round"
+        android:pathData="M8.5,9V6.5Q8.5,3 12,3Q15.5,3 15.5,6.5V9" />
+    <path android:fillColor="#FFFFFFFF" android:fillType="evenOdd"
+        android:pathData="M5,8.5H19L20,20.5Q20,22 18.5,22H5.5Q4,22 4,20.5Z M8,14.5a3.5,3.5 0,1 1,7 0a3.5,3.5 0,1 1,-7 0Z" />
+    <path android:strokeColor="#FFFFFFFF" android:strokeWidth="1.8" android:strokeLineCap="round" android:pathData="M14,17L16.5,19.5" />
 </vector>

@@ -62,7 +62,7 @@ app/src/main/java/com/trackmyboot/app/
 
 ## Ícone
 
-O ícone foi criado para o app: uma **lupa verde-limão com uma bola de futebol dentro**, que representa buscar e comparar ofertas, sobre fundo azul-marinho. Arquivos:
+O ícone foi criado para o app: uma **sacola de ofertas** verde-limão com uma **lupa e uma bola de futebol** dentro, que representa buscar e comparar ofertas, e uma etiqueta vermelha de **“%”** pendurada na alça. O fundo é azul-marinho. Arquivos:
 
 - `res/drawable/ic_launcher_foreground.xml`, `ic_launcher_background.xml` e `ic_launcher_monochrome.xml` formam o ícone adaptativo e o ícone temático do Android 13+
 - `res/drawable/ic_notification.xml` é o ícone das notificações (a lupa)
