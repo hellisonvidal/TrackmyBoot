@@ -37,16 +37,13 @@ jobs:
           ls -la "$JAVA_HOME/bin/java"
 
       # ============================================================
-      # GRADLE WRAPPER: Usar wrapper commitado (só gerar se não existir)
+      # GRADLE WRAPPER: Usar wrapper commitado (Gradle 8.5)
       # ============================================================
-      - name: Setup Gradle Wrapper
-        run: |
-          if [ ! -f "./gradlew" ]; then
-            echo "Generating Gradle Wrapper..."
-            gradle wrapper --gradle-version 8.5 --distribution-type bin
-            chmod +x gradlew
-          fi
-          ./gradlew --version
+      - name: Make gradlew executable
+        run: chmod +x gradlew
+
+      - name: Verify Gradle Wrapper
+        run: ./gradlew --version
 
       # ============================================================
       # ANDROID SDK: Setup manual robusto
