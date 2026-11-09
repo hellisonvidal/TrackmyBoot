@@ -42,7 +42,7 @@ jobs:
       - name: Generate Gradle Wrapper (Linux)
         uses: gradle/gradle-build-action@v2
         with:
-          gradle-version: 8.5
+          gradle-version: 8.7
           arguments: wrapper --distribution-type bin
 
       - name: Make gradlew executable
@@ -135,7 +135,7 @@ jobs:
       - name: Generate Gradle Wrapper (Linux)
         uses: gradle/gradle-build-action@v2
         with:
-          gradle-version: 8.5
+          gradle-version: 8.7
           arguments: wrapper --distribution-type bin
 
       - name: Make gradlew executable
@@ -199,7 +199,7 @@ jobs:
       - name: Generate Gradle Wrapper (Linux)
         uses: gradle/gradle-build-action@v2
         with:
-          gradle-version: 8.5
+          gradle-version: 8.7
           arguments: wrapper --distribution-type bin
 
       - name: Make gradlew executable
