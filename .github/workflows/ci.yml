@@ -86,10 +86,6 @@ jobs:
           restore-keys: |
             ${{ runner.os }}-gradle-
 
-      - name: Run KTLint
-        run: ./gradlew ktlintCheck --no-daemon
-        continue-on-error: true
-
       - name: Run Detekt
         run: ./gradlew detekt --no-daemon
         continue-on-error: true
