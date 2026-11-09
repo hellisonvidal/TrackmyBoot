@@ -37,13 +37,15 @@ jobs:
           ls -la "$JAVA_HOME/bin/java"
 
       # ============================================================
-      # GRADLE WRAPPER: Gerar wrapper correto no runner Linux
+      # GRADLE WRAPPER: Usar wrapper commitado (só gerar se não existir)
       # ============================================================
       - name: Setup Gradle Wrapper
         run: |
-          echo "Generating Gradle Wrapper on Linux runner..."
-          gradle wrapper --gradle-version 8.5 --distribution-type bin
-          chmod +x gradlew
+          if [ ! -f "./gradlew" ]; then
+            echo "Generating Gradle Wrapper..."
+            gradle wrapper --gradle-version 8.5 --distribution-type bin
+            chmod +x gradlew
+          fi
           ./gradlew --version
 
       # ============================================================
