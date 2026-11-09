@@ -57,6 +57,12 @@ android {
             excludes += "/META-INF/{AL2.0,LGPL2.1,LICENSE,NOTICE}"
         }
     }
+
+    // Force WorkManager version to 2.9.0 to avoid AGP/compileSdk conflicts
+    resolutionsStrategy {
+        force("androidx.work:work-runtime:2.9.0")
+        force("androidx.work:work-runtime-ktx:2.9.0")
+    }
 }
 
 dependencies {
